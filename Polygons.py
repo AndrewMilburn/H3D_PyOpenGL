@@ -1,3 +1,5 @@
+# Polygons
+
 import math
 import numpy as np
 
@@ -27,7 +29,7 @@ def init_ortho():
 
 
 def plot_polygon():
-    glBegin(GL_TRIANGLES)
+    glBegin(GL_TRIANGLE_FAN)
     glColor(0, 0, 1)
     for p in points:
         glVertex2f(p[0], p[1])
@@ -35,12 +37,15 @@ def plot_polygon():
 
     glLineWidth(5)
     glColor(1, 0, 0)
-    for i in np.arange(0, len(points) - 2, 3):
+    for i in np.arange(0, len(points) - 2):
         glBegin(GL_LINE_LOOP)
-        glVertex2f(points[i][0], points[i][1])
-        glVertex2f(points[i+1][0], points[i+1][1])
-        glVertex2f(points[i+2][0], points[i+2][1])
+        glVertex2f(points[0][0], points[0][1])
+        glVertex2f(points[i + 1][0], points[i + 1][1])
+        glVertex2f(points[i + 2][0], points[i + 2][1])
         glEnd()
+
+def clear_drawing():
+    points.clear()
 
 
 done = False
@@ -56,6 +61,9 @@ while not done:
             p = pygame.mouse.get_pos()
             points.append((map_value(0, screen_width, ortho_left, ortho_right, p[0]),
                            map_value(0, screen_height, ortho_bottom, ortho_top, p[1])))
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                clear_drawing()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glMatrixMode(GL_MODELVIEW)
