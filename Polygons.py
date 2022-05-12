@@ -1,6 +1,6 @@
 # Polygons
-
-import math
+#
+# import math
 import numpy as np
 
 import pygame
@@ -29,20 +29,22 @@ def init_ortho():
 
 
 def plot_polygon():
-    glBegin(GL_TRIANGLE_FAN)
+    glBegin(GL_QUAD_STRIP)
     glColor(0, 0, 1)
-    for p in points:
-        glVertex2f(p[0], p[1])
+    for xy in points:
+        glVertex2f(xy[0], xy[1])
     glEnd()
 
     glLineWidth(5)
     glColor(1, 0, 0)
-    for i in np.arange(0, len(points) - 2):
+    for i in np.arange(0, len(points) - 3, 2):
         glBegin(GL_LINE_LOOP)
-        glVertex2f(points[0][0], points[0][1])
+        glVertex2f(points[i][0], points[i][1])
         glVertex2f(points[i + 1][0], points[i + 1][1])
         glVertex2f(points[i + 2][0], points[i + 2][1])
+        glVertex2f(points[i + 3][0], points[i + 3][1])
         glEnd()
+
 
 def clear_drawing():
     points.clear()
