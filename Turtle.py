@@ -20,7 +20,7 @@ screen = pygame.display.set_mode((screen_width, screen_height), DOUBLEBUF | OPEN
 pygame.display.set_caption('Turtle Graphics')
 current_position = (0, 0)
 current_direction = np.array([0, 1, 0])
-draw_length = 50
+
 
 def init_ortho():
     glMatrixMode(GL_PROJECTION)
@@ -35,20 +35,30 @@ def line_to(x, y):
     current_position = (x, y)
     glEnd()
 
+def move_to(x, y):
+    global current_position
+    current_position = (x, y)
+
 def reset_turtle():
     global current_position
     global  current_direction
     current_position = (0, 0)
     current_direction = np.array([0, 1, 0])
 
-def draw_turtle():
-    forward()
-    forward()
 
-def forward():
+def forward(draw_length):
     new_x = current_position[0] + current_direction[0] * draw_length
     new_y = current_position[1] + current_direction[1] * draw_length
     line_to(new_x, new_y)
+
+def rotate(theta):
+    global  current_direction
+    current_direction = z_rotation(current_direction, math.radians(theta))
+
+def draw_turtle():
+    for i in range(20):
+        forward(200)
+        rotate(170)
 
 init_ortho()
 done = False
