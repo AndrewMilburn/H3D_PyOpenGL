@@ -13,13 +13,39 @@ screen_width = 800
 screen_height = 800
 ortho_left = -400
 ortho_right = 400
-ortho_top = -400
-ortho_bottom = 400
+ortho_top = 0
+ortho_bottom = 800
 
 screen = pygame.display.set_mode((screen_width, screen_height), DOUBLEBUF | OPENGL)
 pygame.display.set_caption('Turtle Graphics')
 current_position = (0, 0)
 current_direction = np.array([0, 1, 0])
+
+axiom = 'X'
+rules = {"F": "FF",
+        "X" : "F+[-F-XF-X][+FF][--XF[+X]][++F-X]"
+        }
+draw_length = 5
+angle = 25
+stack = []
+iterations = 5
+instructions= ""
+
+def run_rule(count):
+    global instructions
+    instructions = axiom
+    for loops in range(count):
+        old_system = instructions
+        instructions = ""
+        for c in range(0, len(old_system)):
+            if old_system[c] in rules:
+                instructions += rules[old_system[c]]
+            else:
+                instructions += old_system[c]
+    print("Rule")
+    print(instructions)
+
+
 
 
 def init_ortho():
@@ -35,9 +61,9 @@ def line_to(x, y):
     current_position = (x, y)
     glEnd()
 
-def move_to(x, y):
+def move_to(pos):
     global current_position
-    current_position = (x, y)
+    current_position = (pos[0], pos[1])
 
 def reset_turtle():
     global current_position
@@ -56,13 +82,26 @@ def rotate(theta):
     current_direction = z_rotation(current_direction, math.radians(theta))
 
 def draw_turtle():
-    for i in range(20):
-        forward(200)
-        rotate(170)
+    global current_direction
+    for c in range(0, len(instructions)):
+        if instructions[c] == 'F':
+            forward(draw_length)
+        elif instructions[c] == '+':
+            rotate(angle)
+        elif instructions[c] == '-':
+            rotate(-angle)
+        elif instructions[c] == '[':
+            stack.append((current_position, current_direction))
+        elif instructions[c] == ']':
+            current_vector = stack.pop()
+            move_to(current_vector[0])
+            current_direction = current_vector[1]
+
 
 init_ortho()
 done = False
-glLineWidth(3)
+glLineWidth(1)
+run_rule(iterations)
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
