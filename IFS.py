@@ -13,11 +13,11 @@ screen_width = 800
 screen_height = 800
 ortho_left = -400
 ortho_right = 400
-ortho_top = 0
-ortho_bottom = 800
+ortho_top = -300
+ortho_bottom = 500
 
 screen = pygame.display.set_mode((screen_width, screen_height), DOUBLEBUF | OPENGL)
-pygame.display.set_caption('Turtle Graphics')
+pygame.display.set_caption('Iterative Functions')
 current_position = (0, 0)
 current_direction = np.array([0, 1, 0])
 
@@ -93,9 +93,20 @@ def draw_turtle():
     global x_point, y_point
     points.append((x_point, y_point))
     r = np.random.rand()
-    if r < 0.1:
-        x_point, y_point = 0.00 * x_point + 0.00 * y_point, 0.00 * x_point + 0.16 * y_point + 0.0
-
+    # if r < 0.1:
+    #     x_point, y_point = 0.00 * x_point + 0.00 * y_point + 0.0, 0.00 * x_point + 0.16 * y_point + 0.0
+    # elif r < 0.86:
+    #     x_point, y_point = 0.85 * x_point + 0.04 * y_point + 0.0, -0.04 * x_point + 0.85 * y_point + 1.6
+    # elif r < 0.93:
+    #     x_point, y_point = 0.2 * x_point - 0.26 * y_point + 0.0, 0.23 * x_point + 0.22 * y_point + 0.44
+    # else:
+    #     x_point, y_point = -0.15 * x_point + 0.28 * y_point + 0.0, 0.26 * x_point + 0.24 * y_point + 0.44
+    if r < 0.33:
+        x_point, y_point = 0.50 * x_point + 0.00 * y_point + 0.0, 0.0 * x_point + 0.5 * y_point + 0.5
+    elif r < 0.66:
+        x_point, y_point = 0.5 * x_point + 0.0 * y_point + 0.5, -0.0 * x_point + 0.5 * y_point + 0
+    else:
+        x_point, y_point = 0.5 * x_point + 0.0 * y_point + 0.0, 0.0 * x_point + 0.5 * y_point + 0.00
 
 
 def draw_points():
@@ -108,6 +119,7 @@ def draw_points():
 init_ortho()
 done = False
 glPointSize(2)
+glColor3f(0, 1, 0)
 
 while not done:
     for event in pygame.event.get():
@@ -117,13 +129,10 @@ while not done:
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
-    glBegin(GL_POINTS)
-    glVertex2f(0, 0)
-    glEnd()
-
+    glScaled(300, 300, 1)
     reset_turtle()
     draw_turtle()
     draw_points()
-
     pygame.display.flip()
+    #pygame.time.wait(1)
 pygame.quit()
